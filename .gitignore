@@ -12,9 +12,6 @@ data/*.pkl
 data/*.joblib
 models/*
 !models/.gitkeep
-reports/figures/*.png
-reports/figures/*.svg
-reports/figures/*.pdf
 reports/tables/*.csv
 reports/tables/*.md
 reports/tables/*.txt
