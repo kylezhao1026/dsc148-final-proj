@@ -25,4 +25,5 @@ reports/tables/*.json
 *.fdb_latexmk
 *.fls
 *.out
+*.synctex.gz
 reports/build/
