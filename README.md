@@ -1,20 +1,40 @@
-# DSC 148 Final Project
+# Steam Game Popularity Predictor
 
-Steam game popularity prediction project.
+DSC 148 final project predicting whether a Steam game will become popular from storefront metadata.
 
-## Data
+## Demo
 
-Download the Kaggle CSV and place it here:
+Try the deployed Streamlit app:
+
+https://dsc148-final-proj.streamlit.app/
+
+The app lets users enter a hypothetical Steam game profile and returns the model's predicted probability that the game will rank in the top quartile of popularity for its release-year cohort.
+
+## Project Summary
+
+We use the Kaggle Steam Games Dataset 2025 to predict game popularity from launch-visible metadata such as price, release timing, platforms, genres, tags, categories, supported languages, and store description text.
+
+The predictive task is binary classification:
+
+- `popular = 1` if a game is in the top 25% of the selected popularity signal within its release year
+- default popularity signal: `num_reviews_total`
+- evaluation metrics: accuracy, precision, recall, F1, PR-AUC, and ROC-AUC
+
+The feature pipeline avoids target leakage by dropping direct post-release popularity signals such as owners, reviews, recommendations, CCU, playtime, ratings, and scores.
+
+## Dataset
+
+The data file is too large to commit. To run the project locally, download the cleaned CSV from Kaggle and place it here:
 
 ```text
 data/games_march2025_cleaned.csv
 ```
 
-Dataset page:
+Dataset: https://www.kaggle.com/datasets/artermiloff/steam-games-dataset
 
-https://www.kaggle.com/datasets/artermiloff/steam-games-dataset
+## Local Reproduction
 
-## Setup
+The hosted demo is enough to try the model interactively. These commands are only needed if you want to reproduce the pipeline locally.
 
 ```bash
 python3 -m venv .venv
@@ -22,66 +42,30 @@ source .venv/bin/activate
 pip install -r requirements.txt
 ```
 
-The core pipeline works with pandas, scikit-learn, matplotlib, joblib, and streamlit. LightGBM and XGBoost are optional stronger models.
-
-## Run EDA
-
 ```bash
-python -m src.eda --data data/games_march2025_cleaned.csv
+make eda
+make baseline
+make experiments
+make errors
 ```
 
-Outputs:
-
-- `reports/tables/dataset_summary.csv`
-- `reports/tables/missingness.csv`
-- `reports/tables/target_by_year.csv`
-- `reports/figures/*.png`
-
-## Train Models
+To run the Streamlit app locally after training:
 
 ```bash
-python -m src.train --data data/games_march2025_cleaned.csv
+make demo
 ```
 
-For a faster first pass:
+## Repository Guide
 
-```bash
-python -m src.train --data data/games_march2025_cleaned.csv --models majority logistic_regression linear_svm_sgd
+```text
+src/                    model training, features, evaluation, EDA, error analysis
+app/streamlit_app.py     Streamlit demo
+reports/paper.pdf        final report
+reports/paper.tex        report source
+data/README.md           dataset placement note
+Makefile                 common commands
 ```
 
-## Run Ablations and Error Analysis
+## Report
 
-```bash
-python -m src.experiments --data data/games_march2025_cleaned.csv --target-column num_reviews_total
-python -m src.error_analysis --data data/games_march2025_cleaned.csv --model models/best_experiment_model.joblib --target-column num_reviews_total
-```
-
-Outputs:
-
-- `reports/tables/ablation_metrics.csv`
-- `reports/tables/experiment_metadata.json`
-- `reports/tables/error_cases.csv`
-- `models/best_experiment_model.joblib`
-
-Outputs:
-
-- `reports/tables/model_metrics.csv`
-- `reports/tables/classification_report.txt`
-- `reports/tables/run_metadata.json`
-- `models/best_model.joblib`
-
-The default target preference is `num_reviews_total`, which gives a cleaner
-within-year top-quartile label than coarse owner buckets. You can pass another
-target explicitly:
-
-```bash
-python -m src.train --data data/games_march2025_cleaned.csv --target-column estimated_owners
-```
-
-## Demo
-
-After training:
-
-```bash
-streamlit run app/streamlit_app.py
-```
+The final report is available at `reports/paper.pdf`.

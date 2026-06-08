@@ -1,7 +1,9 @@
-\documentclass[sigconf,nonacm]{acmart}
+\documentclass[11pt,sigconf,nonacm]{acmart}
 
 \usepackage{booktabs}
 \usepackage{graphicx}
+
+\setlength{\emergencystretch}{3em}
 
 \settopmatter{printacmref=false}
 \renewcommand\footnotetextcopyrightpermission[1]{}
@@ -131,6 +133,8 @@ Table~\ref{tab:baselines} shows the baseline results on the temporal test split.
 \centering
 \caption{Baseline model performance on the 2023--2025 temporal test set.}
 \label{tab:baselines}
+\small
+\setlength{\tabcolsep}{3pt}
 \begin{tabular}{lrrrrrr}
 \toprule
 Model & Acc. & Prec. & Rec. & F1 & PR & ROC \\
@@ -148,6 +152,7 @@ Table~\ref{tab:ablations} shows feature ablations and the stronger non-linear co
 \centering
 \caption{Feature ablation and stronger-model results. ``PR'' denotes PR-AUC and ``ROC'' denotes ROC-AUC.}
 \label{tab:ablations}
+\small
 \begin{tabular}{lrrrrrr}
 \toprule
 Experiment & Acc. & Prec. & Rec. & F1 & PR & ROC \\
@@ -166,6 +171,8 @@ Adding description text to the numeric plus store metadata model slightly hurts 
 
 The accuracy numbers should be interpreted carefully. The majority baseline already obtains 0.749 accuracy because 75\% of games are negative by construction. PR-AUC and ROC-AUC are therefore more informative. The best model's PR-AUC of 0.612 is substantially above the positive-class prevalence of 0.251, showing that the model ranks likely popular games much better than chance even though many individual predictions remain difficult.
 
+We did not run a formal statistical significance test, so the reported gaps should be interpreted as empirical differences on one temporal holdout rather than confidence-bounded estimates. Hyperparameter sensitivity appeared modest in the experiments we ran: the main conclusions were stable across linear baselines and feature ablations, while changing from sparse linear features to a 100-component SVD representation hurt performance.
+
 \section{Error Analysis}
 
 False positives include many games whose metadata resembles successful puzzle, hidden-object, or casual titles but whose actual review counts fall below the within-year popularity threshold. Examples include repeated \texttt{Archaeology} and \texttt{3D PUZZLE} titles. This suggests the model sometimes overweights genre and tag patterns without enough information about brand strength, production quality, or marketing reach.
@@ -178,6 +185,8 @@ High-confidence correct positives include recognizable or franchise-backed games
 \centering
 \caption{Representative error cases from the best model. Prob. is the predicted top-quartile probability.}
 \label{tab:errorcases}
+\small
+\setlength{\tabcolsep}{3pt}
 \begin{tabular}{llr}
 \toprule
 Type & Game & Prob. \\
