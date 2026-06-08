@@ -32,6 +32,103 @@ MONTHS = {
     "December": 12,
 }
 
+GENRE_OPTIONS = [
+    "Action",
+    "Adventure",
+    "Casual",
+    "Indie",
+    "Simulation",
+    "Strategy",
+    "RPG",
+    "Early Access",
+    "Free To Play",
+    "Sports",
+    "Racing",
+    "Massively Multiplayer",
+    "Puzzle",
+    "Visual Novel",
+    "Education",
+    "Utilities",
+]
+
+TAG_OPTIONS = [
+    "Singleplayer",
+    "Multiplayer",
+    "Co-op",
+    "Online Co-Op",
+    "PvP",
+    "Indie",
+    "Casual",
+    "Action",
+    "Adventure",
+    "Simulation",
+    "Strategy",
+    "RPG",
+    "Story Rich",
+    "Open World",
+    "2D",
+    "3D",
+    "Atmospheric",
+    "Fantasy",
+    "Sci-fi",
+    "Horror",
+    "Puzzle",
+    "Platformer",
+    "Shooter",
+    "FPS",
+    "Roguelike",
+    "Survival",
+    "Anime",
+    "Card Game",
+    "Deckbuilding",
+    "Hidden Object",
+]
+
+CATEGORY_OPTIONS = [
+    "Single-player",
+    "Multi-player",
+    "PvP",
+    "Online PvP",
+    "Co-op",
+    "Online Co-op",
+    "Steam Achievements",
+    "Steam Trading Cards",
+    "Steam Cloud",
+    "Full controller support",
+    "Partial Controller Support",
+    "Family Sharing",
+    "In-App Purchases",
+    "Remote Play Together",
+    "Remote Play on Phone",
+    "Remote Play on Tablet",
+    "Remote Play on TV",
+    "Stats",
+    "Captions available",
+    "Steam Workshop",
+]
+
+LANGUAGE_OPTIONS = [
+    "English",
+    "Spanish - Spain",
+    "Spanish - Latin America",
+    "French",
+    "German",
+    "Italian",
+    "Japanese",
+    "Korean",
+    "Polish",
+    "Portuguese - Brazil",
+    "Portuguese - Portugal",
+    "Russian",
+    "Simplified Chinese",
+    "Traditional Chinese",
+    "Turkish",
+    "Ukrainian",
+    "Arabic",
+    "Thai",
+    "Vietnamese",
+]
+
 
 def inject_css() -> None:
     st.markdown(
@@ -62,6 +159,10 @@ def inject_css() -> None:
         h1, h2, h3, label {
             color: var(--ink) !important;
             letter-spacing: 0 !important;
+        }
+
+        [data-testid="InputInstructions"] {
+            display: none !important;
         }
 
         [data-testid="stHeader"] {
@@ -177,25 +278,59 @@ def inject_css() -> None:
         .stButton > button {
             width: 100%;
             border-radius: 8px;
-            border: 0;
-            background: var(--ink);
-            color: #ffffff;
+            border: 1px solid var(--ink) !important;
+            background: var(--ink) !important;
+            color: #ffffff !important;
             font-weight: 750;
             padding: 0.75rem 1rem;
         }
 
-        .stButton > button:hover {
-            background: #263241;
-            color: #ffffff;
-            border: 0;
+        .stButton > button p {
+            color: #ffffff !important;
+            font-weight: 750 !important;
+        }
+
+        .stButton > button:hover,
+        .stButton > button:focus {
+            background: #263241 !important;
+            color: #ffffff !important;
+            border: 1px solid #263241 !important;
         }
 
         .stTextInput input,
         .stTextArea textarea,
         .stNumberInput input,
-        .stSelectbox div[data-baseweb="select"] > div {
+        .stSelectbox div[data-baseweb="select"] > div,
+        .stMultiSelect div[data-baseweb="select"] > div {
             border-radius: 8px !important;
             border-color: #cbd5e1 !important;
+        }
+
+        .stCheckbox label,
+        .stCheckbox label span,
+        .stCheckbox label p,
+        [data-testid="stCheckbox"] label,
+        [data-testid="stCheckbox"] label span,
+        [data-testid="stCheckbox"] label p {
+            color: var(--ink) !important;
+            opacity: 1 !important;
+        }
+
+        .stMultiSelect [data-baseweb="tag"] {
+            background: #eaf6f2 !important;
+            color: var(--ink) !important;
+            border-radius: 6px !important;
+        }
+
+        .stMultiSelect [data-baseweb="tag"] span {
+            color: var(--ink) !important;
+        }
+
+        .hint {
+            color: var(--muted);
+            font-size: 0.84rem;
+            line-height: 1.35;
+            margin: -0.25rem 0 0.65rem;
         }
 
         @media (max-width: 800px) {
@@ -302,10 +437,34 @@ with st.form("game_form", clear_on_submit=False):
         )
 
     with middle:
-        genres = st.text_input("Genres", "Action, Adventure")
-        tags = st.text_input("Tags", "Singleplayer, Indie, Story Rich")
-        categories = st.text_input("Categories", "Single-player, Steam Achievements")
-        supported_languages = st.text_input("Languages", "English, Spanish")
+        genre_values = st.multiselect(
+            "Genres",
+            GENRE_OPTIONS,
+            default=["Action", "Adventure", "Indie"],
+            help="Common Steam genre labels from the dataset. Choose one or more.",
+        )
+        tag_values = st.multiselect(
+            "Tags",
+            TAG_OPTIONS,
+            default=["Singleplayer", "Indie", "Story Rich"],
+            help="Common Steam user tags. Tags usually describe gameplay style more specifically than genres.",
+        )
+        category_values = st.multiselect(
+            "Categories",
+            CATEGORY_OPTIONS,
+            default=["Single-player", "Steam Achievements"],
+            help="Steam store feature categories.",
+        )
+        language_values = st.multiselect(
+            "Languages",
+            LANGUAGE_OPTIONS,
+            default=["English", "Spanish - Spain"],
+            help="Supported interface/subtitle languages.",
+        )
+        st.markdown(
+            '<div class="hint">Use the dropdowns for common values. The model treats selections as store metadata text.</div>',
+            unsafe_allow_html=True,
+        )
 
     with right:
         price = st.number_input("Price", min_value=0.0, value=19.99, step=1.0)
@@ -337,10 +496,10 @@ if submitted:
             "discount": discount,
             "release_month": MONTHS[release_month_name],
             "required_age": required_age,
-            "genres": genres,
-            "tags": tags,
-            "categories": categories,
-            "supported_languages": supported_languages,
+            "genres": ", ".join(genre_values),
+            "tags": ", ".join(tag_values),
+            "categories": ", ".join(category_values),
+            "supported_languages": ", ".join(language_values),
             "developers": "",
             "publishers": "",
             "detailed_description": description,
