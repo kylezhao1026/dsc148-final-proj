@@ -1,16 +1,21 @@
 from __future__ import annotations
 
 import json
+import sys
 from pathlib import Path
 
 import joblib
 import pandas as pd
 import streamlit as st
 
-MODEL_PATH = Path("models/best_experiment_model.joblib")
-FALLBACK_MODEL_PATH = Path("models/best_model.joblib")
-METADATA_PATH = Path("reports/tables/experiment_metadata.json")
-FALLBACK_METADATA_PATH = Path("reports/tables/run_metadata.json")
+ROOT = Path(__file__).resolve().parents[1]
+if str(ROOT) not in sys.path:
+    sys.path.insert(0, str(ROOT))
+
+MODEL_PATH = ROOT / "models/best_experiment_model.joblib"
+FALLBACK_MODEL_PATH = ROOT / "models/best_model.joblib"
+METADATA_PATH = ROOT / "reports/tables/experiment_metadata.json"
+FALLBACK_METADATA_PATH = ROOT / "reports/tables/run_metadata.json"
 
 MONTHS = {
     "January": 1,
