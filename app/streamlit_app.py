@@ -281,12 +281,18 @@ def inject_css() -> None:
             border: 1px solid var(--ink) !important;
             background: var(--ink) !important;
             color: #ffffff !important;
+            -webkit-text-fill-color: #ffffff !important;
             font-weight: 750;
             padding: 0.75rem 1rem;
         }
 
-        .stButton > button p {
+        .stButton > button *,
+        .stButton > button p,
+        .stButton > button span,
+        button[kind="primary"] *,
+        button[kind="secondary"] * {
             color: #ffffff !important;
+            -webkit-text-fill-color: #ffffff !important;
             font-weight: 750 !important;
         }
 
@@ -294,6 +300,7 @@ def inject_css() -> None:
         .stButton > button:focus {
             background: #263241 !important;
             color: #ffffff !important;
+            -webkit-text-fill-color: #ffffff !important;
             border: 1px solid #263241 !important;
         }
 
