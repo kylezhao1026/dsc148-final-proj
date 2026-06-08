@@ -216,7 +216,7 @@ def load_metadata() -> dict:
 
 
 def expected_feature_columns(metadata: dict) -> list[str]:
-    feature_spec = metadata.get("feature_spec", {})
+    feature_spec = metadata.get("feature_spec") or metadata.get("full_feature_spec", {})
     return (
         feature_spec.get("numeric_columns", [])
         + feature_spec.get("categorical_columns", [])
@@ -225,7 +225,7 @@ def expected_feature_columns(metadata: dict) -> list[str]:
 
 
 def build_input_row(values: dict, metadata: dict) -> pd.DataFrame:
-    feature_spec = metadata.get("feature_spec", {})
+    feature_spec = metadata.get("feature_spec") or metadata.get("full_feature_spec", {})
     row = pd.DataFrame([values])
     for column in expected_feature_columns(metadata):
         if column not in row.columns:

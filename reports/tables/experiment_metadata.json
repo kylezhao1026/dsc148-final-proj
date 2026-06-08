@@ -1,0 +1,111 @@
+{
+  "target": {
+    "target_column": "popular",
+    "raw_target_column": "num_reviews_total",
+    "release_year_column": "_release_year",
+    "threshold_quantile": 0.75,
+    "positive_rate": 0.25047966592678983,
+    "rows": 53162
+  },
+  "full_feature_spec": {
+    "numeric_columns": [
+      "required_age",
+      "price",
+      "dlc_count",
+      "windows",
+      "mac",
+      "linux",
+      "discount",
+      "release_month"
+    ],
+    "categorical_columns": [],
+    "text_columns": [
+      "short_description",
+      "detailed_description",
+      "about_the_game",
+      "name",
+      "genres",
+      "tags",
+      "categories",
+      "supported_languages",
+      "developers",
+      "publishers"
+    ],
+    "dropped_columns": [
+      "_popularity_value",
+      "_release_year",
+      "achievements",
+      "appid",
+      "average_playtime_2weeks",
+      "average_playtime_forever",
+      "estimated_owners",
+      "header_image",
+      "median_playtime_2weeks",
+      "median_playtime_forever",
+      "metacritic_score",
+      "metacritic_url",
+      "movies",
+      "negative",
+      "num_reviews_recent",
+      "num_reviews_total",
+      "packages",
+      "pct_pos_recent",
+      "pct_pos_total",
+      "peak_ccu",
+      "popular",
+      "positive",
+      "recommendations",
+      "release_date",
+      "reviews",
+      "score_rank",
+      "screenshots",
+      "support_email",
+      "support_url",
+      "user_score"
+    ]
+  },
+  "best_experiment": "linear_numeric_plus_store_metadata",
+  "train_rows": 36227,
+  "test_rows": 16935,
+  "train_years": [
+    2009,
+    2010,
+    2011,
+    2012,
+    2013,
+    2014,
+    2015,
+    2016,
+    2017,
+    2018,
+    2019,
+    2020,
+    2021,
+    2022
+  ],
+  "test_years": [
+    2023,
+    2024,
+    2025
+  ],
+  "ablations": {
+    "numeric_only": [
+      "numeric"
+    ],
+    "descriptions_only": [
+      "descriptions"
+    ],
+    "store_metadata_only": [
+      "store_metadata"
+    ],
+    "numeric_plus_store_metadata": [
+      "numeric",
+      "store_metadata"
+    ],
+    "all_features": [
+      "descriptions",
+      "numeric",
+      "store_metadata"
+    ]
+  }
+}
